@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './modules';
+import { AccessKey, User, UserModule } from './modules';
 
 @Module({
   imports: [
@@ -13,10 +13,11 @@ import { User } from './modules';
       username: 'root',
       password: 'password',
       database: 'access_key_management',
-      entities: [User],
+      entities: [User, AccessKey],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, AccessKey]),
+    UserModule
   ],
   controllers: [AppController],
   providers: [AppService],
