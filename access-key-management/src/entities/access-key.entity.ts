@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { User } from '../User';
+import { User } from '../modules/User';
 
 @Entity()
 export class AccessKey {
@@ -12,7 +12,7 @@ export class AccessKey {
     @Column()
     expiration: Date;
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => User, (user) => user.accessKeys) // ManyToOne relationship
     user: User;
 
     // Add other key related fields as needed

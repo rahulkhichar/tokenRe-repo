@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AccessKey, AccessKeyModule, User, UserModule } from './modules';
+import { AccessKey, AccessKeyModule, AdminModule, User, UserModule } from './modules';
 
 @Module({
   imports: [
@@ -17,6 +17,7 @@ import { AccessKey, AccessKeyModule, User, UserModule } from './modules';
       synchronize: true,
     }),
     TypeOrmModule.forFeature([User, AccessKey]),
+    AdminModule,
     UserModule,
     AccessKeyModule
   ],

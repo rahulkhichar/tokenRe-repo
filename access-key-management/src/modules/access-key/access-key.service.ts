@@ -1,13 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 // import { InjectRedis } from '@nestjs/redis';
 // import { Redis } from 'redis';
-import { Repository } from 'typeorm';
-import { AccessKey } from './access-key.entity';
+import { AccessKey } from '../../entities/access-key.entity';
 // import { CreateAccessKeyDto, UpdateAccessKeyDto } from './dto';
 import { v4 as uuidv4 } from 'uuid'; // For generating UUIDs
 import { User } from '../User';
-import { UpdateAccessKeyDto } from './dto';
+import { CreateAccessKeyDto, UpdateAccessKeyDto } from './dto';
 import { AccessKeyRepository } from './access-key.repository';
 
 // Define event interface (replace with actual event details)
@@ -25,15 +23,15 @@ export class AccessKeyService {
     ) { }
 
     async createAccessKey(
-        user: User,
-        rateLimit: number,
-        expiration: Date,
+        createAccessKeyDto: CreateAccessKeyDto,
+        user: User
     ): Promise<AccessKey> {
+
         const newKey = new AccessKey();
         newKey.id = uuidv4(); // Generate UUID
         newKey.user = user;
-        newKey.rateLimit = rateLimit;
-        newKey.expiration = expiration;
+        newKey.rateLimit = createAccessKeyDto.rateLimit;
+        newKey.expiration = createAccessKeyDto.expiration;
         const savedKey = await this.accessKeyRepository.save(newKey);
 
         // Publish key creation event to Redis

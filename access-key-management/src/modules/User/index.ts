@@ -1,4 +1,4 @@
-export * from './user.entity';
+export * from '../../entities/user.entity';
 export * from './interface';
 export * from './user.controller';
 export * from './user.repository';
