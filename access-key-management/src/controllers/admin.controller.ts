@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Put, Param, Body } from '@nestjs/common';
 // import { AccessKeyService } from './access-key.service';
-import { AccessKeyService } from '../access-key/access-key.service';
-import { CreateAccessKeyDto, UpdateAccessKeyDto } from '../access-key/dto';
-import { UserService } from '../User';
-import { AdminSerivce } from './admin.service';
+
+import { CreateAccessKeyDto, UpdateAccessKeyDto } from '../modules/access-key/dto';
+
+import { AdminSerivce } from '../services/admin.service';
 
 @Controller('admin/access-keys')
 export class AdminController {

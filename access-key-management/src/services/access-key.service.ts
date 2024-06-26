@@ -1,14 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-// import { InjectRedis } from '@nestjs/redis';
-// import { Redis } from 'redis';
-import { AccessKey } from '../../entities/access-key.entity';
-// import { CreateAccessKeyDto, UpdateAccessKeyDto } from './dto';
-import { v4 as uuidv4 } from 'uuid'; // For generating UUIDs
-import { User } from '../User';
-import { CreateAccessKeyDto, UpdateAccessKeyDto } from './dto';
-import { AccessKeyRepository } from './access-key.repository';
+import { CreateAccessKeyDto, UpdateAccessKeyDto } from '../modules/access-key/dto';
+import { AccessKeyRepository } from '../Repositories/access-key.repository';
+import { AccessKey, User } from 'src/entities';
 
-// Define event interface (replace with actual event details)
 export interface AccessKeyEvent {
     id: string;
     rateLimit: number;
@@ -27,22 +21,28 @@ export class AccessKeyService {
         user: User
     ): Promise<AccessKey> {
 
-        const newKey = new AccessKey();
-        newKey.id = uuidv4(); // Generate UUID
-        newKey.user = user;
-        newKey.rateLimit = createAccessKeyDto.rateLimit;
-        newKey.expiration = createAccessKeyDto.expiration;
-        const savedKey = await this.accessKeyRepository.save(newKey);
+        try {
+            const newKey = new AccessKey();
+            newKey.user = user;
+            newKey.rateLimit = createAccessKeyDto.rateLimit;
+            newKey.expiration = createAccessKeyDto.expiration;
+            const savedKey = await this.accessKeyRepository.save(newKey);
 
-        // Publish key creation event to Redis
-        // const event: AccessKeyEvent = {
-        //     id: savedKey.id,
-        //     rateLimit: savedKey.rateLimit,
-        //     expiration: savedKey.expiration,
-        // };
-        // await this.redis.publish('access_key_created', JSON.stringify(event));
+            // Publish key creation event to Redis
+            // const event: AccessKeyEvent = {
+            //     id: savedKey.id,
+            //     rateLimit: savedKey.rateLimit,
+            //     expiration: savedKey.expiration,
+            // };
+            // await this.redis.publish('access_key_created', JSON.stringify(event));
 
-        return savedKey;
+
+            return savedKey;
+        } catch (error) {
+
+            console.log(error);
+
+        }
     }
 
     async getAccessKeyById(id: string): Promise<AccessKey> {

@@ -2,7 +2,14 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AccessKey, AccessKeyModule, AdminModule, User, UserModule } from './modules';
+import { AccessKey, User } from './entities';
+import { AdminSerivce } from './services/admin.service';
+import { UserService } from './services/user.service';
+import { AccessKeyService } from './services/access-key.service';
+import { AccessKeyRepository } from './Repositories/access-key.repository';
+import { UserRepository } from './Repositories/user.repository';
+import { AdminController } from './controllers/admin.controller';
+import { UserController } from './controllers/user.controller';
 
 @Module({
   imports: [
@@ -17,11 +24,8 @@ import { AccessKey, AccessKeyModule, AdminModule, User, UserModule } from './mod
       synchronize: true,
     }),
     TypeOrmModule.forFeature([User, AccessKey]),
-    AdminModule,
-    UserModule,
-    AccessKeyModule
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, AdminController, UserController],
+  providers: [AppService, AdminSerivce, UserService, AccessKeyService, AccessKeyRepository, UserRepository],
 })
 export class AppModule {}

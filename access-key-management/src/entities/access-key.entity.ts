@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { User } from '../modules/User';
+import { User } from './user.entity';
 
 @Entity()
 export class AccessKey {

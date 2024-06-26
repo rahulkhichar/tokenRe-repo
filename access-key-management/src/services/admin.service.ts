@@ -1,6 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import { AccessKey, AccessKeyService, CreateAccessKeyDto, UpdateAccessKeyDto } from "../access-key";
-import { UserService } from "../User";
+
+import { User, AccessKey } from '../entities';
+import { UserService } from "./user.service";
+import { AccessKeyService } from "./access-key.service";
+import { CreateAccessKeyDto } from "src/modules";
 
 @Injectable()
 export class AdminSerivce {
@@ -11,7 +14,7 @@ export class AdminSerivce {
 
     async createAccessKey(
         createAccessKeyDto: CreateAccessKeyDto
-    ): Promise<AccessKey> {
+    ) {
 
         const user = await this.userService.findUserByUsername(createAccessKeyDto.username);
         return await this.accessKeyService.createAccessKey(createAccessKeyDto, user);
@@ -31,8 +34,6 @@ export class AdminSerivce {
         // //     expiration: savedKey.expiration,
         // // };
         // // await this.redis.publish('access_key_created', JSON.stringify(event));
-
-        // return savedKey;
     }
 
     // async getAccessKeyById(id: string): Promise<AccessKey> {
