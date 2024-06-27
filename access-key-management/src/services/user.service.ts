@@ -12,7 +12,8 @@ export class UserService {
         return await this.userRepository.findOne({
             where: {
                 username
-            }
+            },
+            relations: ['accessKeys']
         });
     }
 
