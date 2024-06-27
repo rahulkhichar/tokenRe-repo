@@ -3,8 +3,8 @@ import { User } from './user.entity';
 
 @Entity()
 export class AccessKey {
-    @PrimaryGeneratedColumn()
-    id: string; // Consider using a stronger identifier format (e.g., UUID)
+    @PrimaryGeneratedColumn('uuid') // Use 'uuid' for UUID generation
+    id: string;
 
     @Column()
     rateLimit: number;

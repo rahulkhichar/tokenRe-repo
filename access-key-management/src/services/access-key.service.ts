@@ -77,5 +77,16 @@ export class AccessKeyService {
         return updatedKey;
     }
 
-    // Add other methods for CRUD operations, user requests, etc.
+    async deleteAccessKey(
+        id: string
+    ): Promise<void> {
+        await this.accessKeyRepository.delete(id);
+    }
+
+    async listAllAccessKeys(
+    ): Promise<AccessKey[]> {
+        return await this.accessKeyRepository.find({});
+
+    }
+
 }
