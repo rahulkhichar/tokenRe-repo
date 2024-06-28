@@ -5,11 +5,7 @@ import { AccessKey, User } from 'src/entities';
 import { RedisPubSubService } from 'src/modules/redis';
 
 
-export interface AccessKeyEvent {
-    id: string;
-    rateLimit: number;
-    expiration: Date;
-}
+
 
 @Injectable()
 export class AccessKeyService {
@@ -33,12 +29,14 @@ export class AccessKeyService {
             newKey.user = user;
             newKey.rateLimit = createAccessKeyDto.rateLimit;
             newKey.expiration = createAccessKeyDto.expiration;
+            newKey.tokens = createAccessKeyDto.tokens;
             const savedKey = await this.accessKeyRepository.save(newKey);
 
-            const event: AccessKeyEvent = {
+            const event = {
                 id: savedKey.id,
                 rateLimit: savedKey.rateLimit,
                 expiration: savedKey.expiration,
+                tokens: savedKey.tokens
             };
 
             this.redisPubSubService.publish('access-key', JSON.stringify(event)).catch((err) => {
@@ -77,12 +75,16 @@ export class AccessKeyService {
         const updatedKey = await this.accessKeyRepository.save(key);
 
         // Publish key update event to Redis
-        const event: AccessKeyEvent = {
+        const event = {
             id: updatedKey.id,
             rateLimit: updatedKey.rateLimit,
             expiration: updatedKey.expiration,
+            tokens: updateAccessKeyDto.tokens
         };
-        // await this.redis.publish('access_key_updated', JSON.stringify(event));
+
+        this.redisPubSubService.publish('access-key', JSON.stringify(event)).catch((err) => {
+            console.log(" here", err);
+        }).then((val) => { console.log(val); });
 
         return updatedKey;
     }

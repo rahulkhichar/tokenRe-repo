@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { RedisModule } from './modules/redis';
+import { TokenModule } from './modules/access-key-info/token.module';
 
 @Module({
-  imports: [RedisModule],
+  imports: [TokenModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -10,6 +10,10 @@ export class AccessKey {
     rateLimit: number;
 
     @Column()
+    tokens: number;
+
+
+    @Column()
     expiration: Date;
 
     @ManyToOne(() => User, (user) => user.accessKeys) // ManyToOne relationship
