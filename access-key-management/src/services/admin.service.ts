@@ -1,16 +1,19 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, OnModuleInit } from "@nestjs/common";
 
 import { User, AccessKey } from '../entities';
 import { UserService } from "./user.service";
 import { AccessKeyService } from "./access-key.service";
 import { CreateAccessKeyDto, UpdateAccessKeyDto } from "src/modules";
+import { RedisPubSubService } from "src/modules/redis/redis-pubsub.service";
+import { OnEvent } from "@nestjs/event-emitter";
 
 @Injectable()
 export class AdminSerivce {
     constructor(
         private readonly accessKeyService: AccessKeyService,
-        private readonly userService: UserService
+        private readonly userService: UserService,
     ) { }
+
 
     async createAccessKey(
         createAccessKeyDto: CreateAccessKeyDto
@@ -25,6 +28,8 @@ export class AdminSerivce {
         const key = await this.accessKeyService.getAccessKeyById(id);
         return key;
     }
+
+
 
     async updateAccessKey(
         id: string,

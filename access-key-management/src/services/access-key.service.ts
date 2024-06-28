@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAccessKeyDto, UpdateAccessKeyDto } from '../modules/access-key/dto';
 import { AccessKeyRepository } from '../Repositories/access-key.repository';
 import { AccessKey, User } from 'src/entities';
+import { RedisPubSubService } from 'src/modules/redis';
+
 
 export interface AccessKeyEvent {
     id: string;
@@ -11,10 +13,15 @@ export interface AccessKeyEvent {
 
 @Injectable()
 export class AccessKeyService {
+
     constructor(
         private readonly accessKeyRepository: AccessKeyRepository,
-        // @InjectRedis() private readonly redis: Redis,
+        private readonly redisPubSubService: RedisPubSubService,
     ) { }
+
+    async onModuleInit() {
+
+    }
 
     async createAccessKey(
         createAccessKeyDto: CreateAccessKeyDto,
@@ -28,12 +35,15 @@ export class AccessKeyService {
             newKey.expiration = createAccessKeyDto.expiration;
             const savedKey = await this.accessKeyRepository.save(newKey);
 
-            // Publish key creation event to Redis
-            // const event: AccessKeyEvent = {
-            //     id: savedKey.id,
-            //     rateLimit: savedKey.rateLimit,
-            //     expiration: savedKey.expiration,
-            // };
+            const event: AccessKeyEvent = {
+                id: savedKey.id,
+                rateLimit: savedKey.rateLimit,
+                expiration: savedKey.expiration,
+            };
+
+            this.redisPubSubService.publish('access-key', JSON.stringify(event)).catch((err) => {
+                console.log(" here", err);
+            }).then((val) => { console.log(val); });
             // await this.redis.publish('access_key_created', JSON.stringify(event));
 
 

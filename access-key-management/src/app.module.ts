@@ -10,6 +10,7 @@ import { AccessKeyRepository } from './Repositories/access-key.repository';
 import { UserRepository } from './Repositories/user.repository';
 import { AdminController } from './controllers/admin.controller';
 import { UserController } from './controllers/user.controller';
+import { RedisModule } from './modules/redis';
 
 @Module({
   imports: [
@@ -24,6 +25,8 @@ import { UserController } from './controllers/user.controller';
       synchronize: true,
     }),
     TypeOrmModule.forFeature([User, AccessKey]),
+    RedisModule
+
   ],
   controllers: [AppController, AdminController, UserController],
   providers: [AppService, AdminSerivce, UserService, AccessKeyService, AccessKeyRepository, UserRepository],
